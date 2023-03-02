@@ -4,11 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import teka.web.front_end_demo.dto.LoginDto;
 import teka.web.front_end_demo.dto.RegisterDto;
 import teka.web.front_end_demo.model.Person;
 import teka.web.front_end_demo.model.Roles;
@@ -17,7 +20,7 @@ import teka.web.front_end_demo.repository.RolesRepository;
 
 import java.util.Collections;
 
-@RestController
+@Controller
 @RequestMapping("/api/auth")
 public class AuthController {
 
@@ -38,9 +41,15 @@ public class AuthController {
 
     }
 
+    @GetMapping("/register")
+    public String showRegistrationForm(Model model) {
+        model.addAttribute("registerDto", new RegisterDto());
+        return "registration";
+    }
+
 
     @PostMapping("register")
-    public ResponseEntity<String> register(@RequestBody RegisterDto registerDto){
+    public ResponseEntity<String> register(@ModelAttribute("registerDto") RegisterDto registerDto){
 
         if(personRepository.existsByUsername(registerDto.getUsername())){
             return new ResponseEntity<>("Username is taken!", HttpStatus.BAD_REQUEST);
@@ -61,4 +70,20 @@ public class AuthController {
         return new ResponseEntity<>("User registration success!", HttpStatus.OK);
 
     }
+
+
+    @PostMapping("login")
+    public ResponseEntity<String> login(@RequestBody LoginDto loginDto){
+
+        Authentication authentication = authenticationManager
+                .authenticate(
+                        new UsernamePasswordAuthenticationToken(loginDto.getUsername(),
+                                loginDto.getPassword()));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        return new ResponseEntity<>("User sign-in success!", HttpStatus.BAD_REQUEST);
+
+    }
+
 }
