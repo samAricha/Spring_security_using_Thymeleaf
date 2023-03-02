@@ -71,9 +71,14 @@ public class AuthController {
 
     }
 
+    @GetMapping("/login")
+    public String showLoginForm() {
+        return "login";
+    }
+
 
     @PostMapping("login")
-    public ResponseEntity<String> login(@RequestBody LoginDto loginDto){
+    public ResponseEntity<String> login(@ModelAttribute("loginDto") LoginDto loginDto){
 
         Authentication authentication = authenticationManager
                 .authenticate(

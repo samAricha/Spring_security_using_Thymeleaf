@@ -16,7 +16,7 @@ public class IndexController {
     @GetMapping("/login-page")
     public String login(Model model){
         model.addAttribute("message", "Hello, world!");
-        return "login";
+        return "login2";
     }
 
     @GetMapping("/register-page")
