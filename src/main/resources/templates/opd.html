@@ -1,0 +1,23 @@
+
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Physician Office</title>
+  <link th:href = "@{/css/bootstrap.min.css}" rel="stylesheet">
+  <link th:href = "@{/css/style.css}" rel="stylesheet">
+</head>
+<body>
+<h1>Patient in Physician Office</h1>
+<form action="#" th:action="@{/patient}" th:object="${patient}" method="post">
+  <label for="referral">Referral:</label>
+  <input type="checkbox" id="referral" name="referral" th:checked="${patient.referral}"/>
+  <br/>
+  <label for="send-home">Send Home:</label>
+  <input type="checkbox" id="send-home" name="sendHome" th:checked="${patient.sendHome}"/>
+  <br/>
+  <button type="submit">Save</button>
+</form>
+</body>
+</html>
