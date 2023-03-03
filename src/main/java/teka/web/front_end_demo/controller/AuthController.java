@@ -1,5 +1,6 @@
 package teka.web.front_end_demo.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -79,7 +80,7 @@ public class AuthController {
 
 
     @PostMapping("login")
-    public ResponseEntity<String> login(@ModelAttribute("loginDto") LoginDto loginDto){
+    public String login(@ModelAttribute("loginDto") LoginDto loginDto, HttpSession session){
 
         Authentication authentication = authenticationManager
                 .authenticate(
@@ -104,8 +105,11 @@ public class AuthController {
         }
 
 
+        assert userId != null;
+        session.setAttribute("userId", userId);
+        //return new  ResponseEntity<>(userId.toString(), HttpStatus.BAD_REQUEST);
+        return "redirect:/home";
 
-        return new  ResponseEntity<>(userId.toString(), HttpStatus.BAD_REQUEST);
 
     }
 

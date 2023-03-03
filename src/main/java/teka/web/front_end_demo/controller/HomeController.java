@@ -1,5 +1,6 @@
 package teka.web.front_end_demo.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,27 +25,19 @@ public class HomeController {
     private PersonRepository personRepository;
 
     @GetMapping("/home")
-    public String home(Model model) {
+    public String home() {
         // Add any model attributes here
         return "home";
     }
 
     @PostMapping("/submitForm")
-    public ResponseEntity<String> submitForm() {
-        //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        //Long userId = ((CustomUserDetails)auth.getPrincipal()).getId();
+    public ResponseEntity<String> submitForm(HttpSession session) {
+
+        Long userId = (Long) session.getAttribute("userId");
 
 
 
-       CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long userId = customUserDetails.getId();
-
-        
-
-        //at this point you do whatever you want with user id
-        //userService.saveUserId(userId);
-        //return userId.toString();
-        return new ResponseEntity<>("current id:" +userId.toString(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("current id:" +userId, HttpStatus.BAD_REQUEST);
     }
 
 }
