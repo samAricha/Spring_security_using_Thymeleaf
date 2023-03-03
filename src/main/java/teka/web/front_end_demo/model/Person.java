@@ -44,4 +44,6 @@ public class Person {
 
     @OneToOne(mappedBy = "person", cascade = CascadeType.ALL)
     private Physician physician;
+
+
 }

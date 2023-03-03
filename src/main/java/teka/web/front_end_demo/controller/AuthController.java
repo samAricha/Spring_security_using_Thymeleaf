@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import teka.web.front_end_demo.config.CustomUserDetails;
 import teka.web.front_end_demo.dto.LoginDto;
 import teka.web.front_end_demo.dto.RegisterDto;
 import teka.web.front_end_demo.model.Person;
@@ -85,9 +86,26 @@ public class AuthController {
                         new UsernamePasswordAuthenticationToken(loginDto.getUsername(),
                                 loginDto.getPassword()));
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+       SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return new ResponseEntity<>("User sign-in success!", HttpStatus.BAD_REQUEST);
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = null;
+        if (auth != null) {
+            Object principal = auth.getPrincipal();
+            System.out.println("Principal class: " + principal.getClass().getName());
+            if (principal instanceof CustomUserDetails) {
+                CustomUserDetails userDetails = (CustomUserDetails) principal;
+                userId = userDetails.getPerson().getId();
+                System.out.println(userId);
+            } else {
+                System.out.println("Principal is not an instance of CustomUserDetails: " + principal.getClass().getName());
+            }
+        }
+
+
+
+        return new  ResponseEntity<>(userId.toString(), HttpStatus.BAD_REQUEST);
 
     }
 
